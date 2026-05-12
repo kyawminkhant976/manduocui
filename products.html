@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products | 满多翠 Burmese Jade</title>
+    <meta name="description"
+        content="Explore premium Burmese jade products from 满多翠 with dynamic catalog and authentic details." />
+    <link rel="canonical" href="./products.html" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container nav-row">
+            <a class="brand" href="./index.html">
+                <strong>满多翠</strong>
+                <span>Burmese Jade Atelier</span>
+            </a>
+            <nav aria-label="Primary">
+                <ul>
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./about.html">About</a></li>
+                    <li><a class="active" href="./products.html">Products</a></li>
+                    <li><a href="./contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-hero">
+            <div class="container reveal">
+                <p class="label">Catalog</p>
+                <h1 class="page-title">Jade Collection</h1>
+                <p class="page-subtitle">
+                    <span id="productCount">0</span> curated pieces. Click any item to view full detail and origin
+                    profile.
+                </p>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top: 16px;">
+            <div class="container">
+                <div class="toolbar">
+                    <div class="toolbar-group">
+                        <label for="productSearch" class="sr-only">Search products</label>
+                        <input id="productSearch" type="search" placeholder="Search jade pieces" />
+                    </div>
+                    <div class="toolbar-group">
+                        <label for="productSort">Sort by</label>
+                        <select id="productSort">
+                            <option value="default">Featured order</option>
+                            <option value="price-asc">Price: low to high</option>
+                            <option value="price-desc">Price: high to low</option>
+                            <option value="name-asc">Name: A–Z</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="productList" class="grid product-grid" aria-live="polite"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand-group">
+                <a class="brand footer-brand" href="./index.html">
+                    <strong>满多翠</strong>
+                    <span>Burmese Jade Atelier</span>
+                </a>
+                <p class="muted">Premium Burmese jade curated with heritage, clarity, and personal service.</p>
+            </div>
+            <div class="footer-nav">
+                <h3>Explore</h3>
+                <ul>
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./about.html">About</a></li>
+                    <li><a href="./products.html">Products</a></li>
+                    <li><a href="./contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h3>Contact</h3>
+                <p class="muted">+86 147 8735 5553</p>
+                <p class="muted">aungsoemin88</p>
+                <p class="muted">rheoshorts@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <p>© <span id="year"></span> 满多翠. Crafted in Myanmar, shared with the world.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="./js/private-access.js"></script>
+    <script type="module" src="./js/products.js"></script>
+</body>
+
+</html>

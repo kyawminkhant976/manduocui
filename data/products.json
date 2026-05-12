@@ -1,0 +1,47 @@
+[
+    {
+        "id": "1",
+        "name": "Premium Jade Bracelet",
+        "description": "Exquisite Burmese jade bracelet crafted from the finest imperial jade. Features natural green hues with excellent translucency.",
+        "price": 2500,
+        "image": "assets/Products/P5/1.jpg",
+        "category": "bracelet",
+        "material": "Burmese Jade",
+        "weight": 45.2,
+        "dimensions": "7.5cm diameter",
+        "origin": "Myanmar",
+        "inStock": true,
+        "featured": true,
+        "createdAt": "2024-01-15T10:00:00.000Z"
+    },
+    {
+        "id": "2",
+        "name": "Antique Jade Pendant",
+        "description": "Vintage Burmese jade pendant with traditional carving. Rich green color with natural inclusions that add character.",
+        "price": 1800,
+        "image": "assets/Products/P5/2.jpg",
+        "category": "pendant",
+        "material": "Burmese Jade",
+        "weight": 28.5,
+        "dimensions": "4cm x 3cm",
+        "origin": "Myanmar",
+        "inStock": true,
+        "featured": true,
+        "createdAt": "2024-01-20T14:30:00.000Z"
+    },
+    {
+        "id": "3",
+        "name": "Jade Earrings Set",
+        "description": "Elegant pair of Burmese jade earrings. Perfect symmetry and color matching for a sophisticated look.",
+        "price": 950,
+        "image": "assets/Products/P5/3.jpg",
+        "category": "earring",
+        "material": "Burmese Jade",
+        "weight": 12.8,
+        "dimensions": "2.5cm x 1.5cm each",
+        "origin": "Myanmar",
+        "inStock": true,
+        "featured": false,
+        "createdAt": "2024-02-01T09:15:00.000Z"
+    }
+]
