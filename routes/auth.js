@@ -7,7 +7,7 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     // Simple check
-    if (username === 'admin' && password === 'admin123') {
+    if (username === 'admin' && password === 'aungsoemin') {
         res.json({
             token: 'admin-token',
             user: {

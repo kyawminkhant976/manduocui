@@ -1,4 +1,5 @@
 const ADMIN_ACCESS_URL = "./admin.html";
+const BRAND_TAP_WINDOW = 650;
 
 function goToAdminAccess() {
     window.location.href = ADMIN_ACCESS_URL;
@@ -12,27 +13,33 @@ window.addEventListener("keydown", (event) => {
     goToAdminAccess();
 });
 
-const brandLink = document.querySelector(".brand");
 const yearRoot = document.querySelector("#year");
-if (brandLink) {
-    brandLink.addEventListener("dblclick", (event) => {
-        event.preventDefault();
-        goToAdminAccess();
-    });
+const brandLinks = Array.from(document.querySelectorAll(".brand"));
+brandLinks.forEach((brandLink) => {
+    let clickCount = 0;
+    let clickTimer = null;
 
-    let lastTapTime = 0;
-    brandLink.addEventListener("touchend", (event) => {
-        const now = Date.now();
-        const tapGap = now - lastTapTime;
-        lastTapTime = now;
-
-        if (tapGap > 0 && tapGap < 400) {
-            event.preventDefault();
-            goToAdminAccess();
-            lastTapTime = 0;
+    brandLink.addEventListener("click", (event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button > 0) {
+            return;
         }
-    });
-}
+
+        event.preventDefault();
+        clickCount += 1;
+
+        if (clickCount >= 2) {
+            window.clearTimeout(clickTimer);
+            clickCount = 0;
+            goToAdminAccess();
+            return;
+        }
+
+        clickTimer = window.setTimeout(() => {
+            clickCount = 0;
+            window.location.href = brandLink.href;
+        }, BRAND_TAP_WINDOW);
+    }, true);
+});
 
 if (yearRoot) {
     yearRoot.textContent = new Date().getFullYear();

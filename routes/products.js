@@ -67,8 +67,8 @@ router.post('/', async (req, res) => {
     try {
         const products = await readProducts();
         const newProduct = {
-            id: Date.now().toString(),
             ...req.body,
+            id: req.body.id || Date.now().toString(),
             createdAt: new Date().toISOString()
         };
         products.push(newProduct);

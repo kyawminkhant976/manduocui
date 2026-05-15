@@ -7,7 +7,6 @@ if (yearRoot) {
 
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
-const product = id ? findProductById(id) : null;
 
 const titleRoot = document.querySelector("#detailTitle");
 const priceRoot = document.querySelector("#detailPrice");
@@ -20,14 +19,16 @@ const thumbs = document.querySelector("#detailThumbs");
 const notFound = document.querySelector("#notFound");
 const content = document.querySelector("#detailContent");
 
-if (!product) {
+function showNotFound() {
     if (notFound) {
         notFound.hidden = false;
     }
     if (content) {
         content.hidden = true;
     }
-} else {
+}
+
+function renderProduct(product) {
     document.title = `${product.name} | 满多翠`;
     titleRoot.textContent = product.name;
     priceRoot.textContent = `$${Number(product.price).toLocaleString()}`;
@@ -63,3 +64,16 @@ if (!product) {
         target.classList.add("active");
     });
 }
+
+async function initProductDetail() {
+    const product = id ? await findProductById(id) : null;
+
+    if (!product) {
+        showNotFound();
+        return;
+    }
+
+    renderProduct(product);
+}
+
+initProductDetail();

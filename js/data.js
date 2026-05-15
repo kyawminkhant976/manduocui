@@ -1,12 +1,34 @@
 // API-based data management
 const API_BASE = window.location.origin;
 
+function normalizeProduct(product = {}) {
+    const description = product.description || product.shortDescription || "";
+    const shortDescription =
+        product.shortDescription || (description.length > 120 ? `${description.slice(0, 117)}...` : description);
+    const image = product.image || "";
+
+    return {
+        ...product,
+        id: String(product.id || ""),
+        name: product.name || "Untitled Jade Product",
+        price: Number(product.price || 0),
+        description,
+        shortDescription,
+        type: product.type || product.category || product.material || "Jade",
+        origin: product.origin || "Myanmar",
+        quality: product.quality || product.material || "Burmese Jade",
+        image,
+        images: Array.isArray(product.images) && product.images.length ? product.images : image ? [image] : []
+    };
+}
+
 // Get all products from API
 async function getProducts() {
     try {
         const response = await fetch(`${API_BASE}/api/products`);
         if (!response.ok) throw new Error('Failed to fetch products');
-        return await response.json();
+        const products = await response.json();
+        return products.map(normalizeProduct);
     } catch (error) {
         console.error('Error fetching products:', error);
         return [];
@@ -18,7 +40,7 @@ async function findProductById(id) {
     try {
         const response = await fetch(`${API_BASE}/api/products/${id}`);
         if (!response.ok) throw new Error('Failed to fetch product');
-        return await response.json();
+        return normalizeProduct(await response.json());
     } catch (error) {
         console.error('Error fetching product:', error);
         return null;
@@ -76,14 +98,14 @@ async function removeProduct(id) {
 }
 
 // Admin authentication
-async function adminLogin(username, password) {
+async function adminLogin(password) {
     try {
         const response = await fetch(`${API_BASE}/api/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username: 'admin', password })
         });
 
         if (!response.ok) {
@@ -107,7 +129,7 @@ function isAdminLoggedIn() {
 
     try {
         const data = JSON.parse(session);
-        return data.token && data.user;
+        return Boolean(data.token && data.user);
     } catch {
         return false;
     }

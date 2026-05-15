@@ -7,9 +7,13 @@ if (yearRoot) {
   yearRoot.textContent = new Date().getFullYear();
 }
 
-if (productRoot) {
-  const products = getProducts();
+async function renderFeaturedProducts() {
+  if (!productRoot) return;
+
+  const products = await getProducts();
   productRoot.innerHTML = products
+    .filter((item) => item.featured)
+    .slice(0, 3)
     .map(
       (item, index) => `
       <article class="card reveal delay-${Math.min(index, 3)}">
@@ -28,3 +32,5 @@ if (productRoot) {
     )
     .join("");
 }
+
+renderFeaturedProducts();

@@ -6,7 +6,7 @@ const searchInput = document.querySelector("#productSearch");
 const sortSelect = document.querySelector("#productSort");
 const yearRoot = document.querySelector("#year");
 
-const products = getProducts();
+let products = [];
 
 function renderProducts(items) {
   if (count) {
@@ -70,4 +70,9 @@ if (sortSelect) {
   sortSelect.addEventListener("change", applyFilters);
 }
 
-renderProducts(products);
+async function initProductsPage() {
+  products = await getProducts();
+  renderProducts(products);
+}
+
+initProductsPage();

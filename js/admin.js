@@ -1,6 +1,7 @@
 import {
     getProducts,
-    upsertProduct,
+    createProduct,
+    updateProduct,
     removeProduct,
     isAdminLoggedIn,
     adminLogin,
@@ -28,6 +29,7 @@ const deleteConfirmModal = document.getElementById("deleteConfirmModal");
 const deleteConfirmMessage = document.getElementById("deleteConfirmMessage");
 const deleteConfirmCancel = document.getElementById("deleteConfirmCancel");
 const deleteConfirmOk = document.getElementById("deleteConfirmOk");
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 let pendingDeleteId = null;
 
 if (yearRoot) {
@@ -43,8 +45,8 @@ function showFlash(message) {
     }, 2400);
 }
 
-function refreshTable() {
-    const products = getProducts();
+async function refreshTable() {
+    const products = await getProducts();
     productTable.innerHTML = products
         .map(
             (item) => `
@@ -72,26 +74,27 @@ function resetForm() {
     actionButton.textContent = "Save Product";
 }
 
-function setAuthUI() {
+async function setAuthUI() {
     const isAuth = isAdminLoggedIn();
     loginPanel.hidden = isAuth;
     dashboardPanel.hidden = !isAuth;
     if (isAuth) {
-        refreshTable();
+        await refreshTable();
     }
 }
 
 if (loginForm) {
-    loginForm.addEventListener("submit", (event) => {
+    loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-        const ok = adminLogin(passwordInput.value.trim());
-        if (!ok) {
+        try {
+            await adminLogin(passwordInput.value.trim());
+            loginError.hidden = true;
+            passwordInput.value = "";
+            await setAuthUI();
+        } catch (error) {
             loginError.hidden = false;
-            return;
+            console.error('Admin login failed:', error);
         }
-        loginError.hidden = true;
-        passwordInput.value = "";
-        setAuthUI();
     });
 }
 
@@ -106,6 +109,14 @@ if (imageFile) {
     imageFile.addEventListener("change", () => {
         const file = imageFile.files?.[0];
         if (!file) return;
+
+        if (file.size > MAX_IMAGE_SIZE) {
+            imageFile.value = "";
+            imageInput.value = "";
+            showFlash("Image is too large. Please use an image under 5 MB.");
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
             imageInput.value = String(reader.result || "");
@@ -115,7 +126,7 @@ if (imageFile) {
 }
 
 if (productForm) {
-    productForm.addEventListener("submit", (event) => {
+    productForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const payload = {
@@ -136,10 +147,21 @@ if (productForm) {
             return;
         }
 
-        upsertProduct(payload);
-        refreshTable();
-        showFlash(payload.id ? "Product updated." : "New product added.");
-        resetForm();
+        try {
+            if (payload.id) {
+                await updateProduct(payload.id, payload);
+                showFlash("Product updated.");
+            } else {
+                delete payload.id;
+                await createProduct(payload);
+                showFlash("New product added.");
+            }
+            await refreshTable();
+            resetForm();
+        } catch (error) {
+            showFlash("Could not save product. Please try again.");
+            console.error('Product save failed:', error);
+        }
     });
 }
 
@@ -167,20 +189,25 @@ if (deleteConfirmCancel) {
 }
 
 if (deleteConfirmOk) {
-    deleteConfirmOk.addEventListener("click", () => {
+    deleteConfirmOk.addEventListener("click", async () => {
         if (!pendingDeleteId) {
             closeDeleteConfirm();
             return;
         }
-        removeProduct(pendingDeleteId);
-        refreshTable();
-        showFlash("Product deleted.");
-        closeDeleteConfirm();
+        try {
+            await removeProduct(pendingDeleteId);
+            await refreshTable();
+            showFlash("Product deleted.");
+            closeDeleteConfirm();
+        } catch (error) {
+            showFlash("Could not delete product. Please try again.");
+            console.error('Product delete failed:', error);
+        }
     });
 }
 
 if (productTable) {
-    productTable.addEventListener("click", (event) => {
+    productTable.addEventListener("click", async (event) => {
         const button = event.target.closest("button");
         if (!button) return;
 
@@ -189,12 +216,12 @@ if (productTable) {
         if (!id || !action) return;
 
         if (action === "delete") {
-            const product = findProductById(id);
+            const product = await findProductById(id);
             openDeleteConfirm(id, product ? product.name : "this product");
             return;
         }
 
-        const product = findProductById(id);
+        const product = await findProductById(id);
         if (!product) return;
 
         formTitle.textContent = "Edit Jade Product";
